@@ -37,6 +37,7 @@ public class Predicate {
         this.operand2 = operand2;
     }
 
+    //对称
     private Predicate symmetric;
 
     public Predicate getSymmetric() {

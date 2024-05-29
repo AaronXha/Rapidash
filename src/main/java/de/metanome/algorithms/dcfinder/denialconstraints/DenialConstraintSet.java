@@ -1,4 +1,5 @@
 package de.metanome.algorithms.dcfinder.denialconstraints;
+
 import ch.javasoft.bitset.IBitSet;
 import ch.javasoft.bitset.LongBitSet;
 import ch.javasoft.bitset.search.NTreeSearch;
@@ -17,6 +18,7 @@ public class DenialConstraintSet implements Iterable<DenialConstraint> {
 
     public DenialConstraintSet() {
     }
+
 
     public boolean contains(DenialConstraint dc) {
         return constraints.contains(dc);

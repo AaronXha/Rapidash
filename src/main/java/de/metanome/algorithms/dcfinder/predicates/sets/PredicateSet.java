@@ -17,7 +17,6 @@ public class PredicateSet implements Iterable<Predicate> {
         indexProvider = _indexProvider;
     }
 
-
     private final LongBitSet bitset;
 
     public PredicateSet() {

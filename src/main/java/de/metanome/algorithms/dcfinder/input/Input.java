@@ -2,18 +2,19 @@ package de.metanome.algorithms.dcfinder.input;
 
 import com.csvreader.CsvReader;
 import de.metanome.algorithms.dcfinder.helpers.IndexProvider;
+import rapidash.Tuple;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Input {
 
     private final String name;
     private final int colCount;
     private final int rowCount;
-    private int originRowCount;
-    private int newRowCount;
     private final List<ParsedColumn<?>> parsedColumns;
 
     private final int[][] intInput;   // int expression of the dataset
@@ -34,20 +35,6 @@ public class Input {
         providerD = new IndexProvider<>();
 
         Column[] columns = readRelationalInputToColumns(relationalInput, rowLimit);
-        colCount = columns.length;
-        rowCount = colCount > 0 ? columns[0].getLineCount() : 0;
-
-        parsedColumns = buildParsedColumns(columns);
-        intInput = buildIntInput(parsedColumns);
-    }
-
-    public Input(RelationalInput relationalInputOrigin, RelationalInput relationalInputNew){
-        name = relationalInputOrigin.relationName + relationalInputNew.relationName;
-        providerS = new IndexProvider<>();
-        providerL = new IndexProvider<>();
-        providerD = new IndexProvider<>();
-
-        Column[] columns = readRelationalInputToColumns(relationalInputOrigin, relationalInputNew);
         colCount = columns.length;
         rowCount = colCount > 0 ? columns[0].getLineCount() : 0;
 
@@ -78,42 +65,6 @@ public class Input {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return columns;
-    }
-
-    private Column[] readRelationalInputToColumns(RelationalInput relationalInputOrigin, RelationalInput relationalInputNew) {
-        final int columnCount = relationalInputOrigin.numberOfColumns();
-        Column[] columns = new Column[columnCount];
-        originRowCount = 0;
-        newRowCount = 0;
-
-        for (int i = 0; i < columnCount; ++i)
-            columns[i] = new Column(relationalInputOrigin.relationName(), relationalInputOrigin.columnNames[i]);
-
-        try {
-            CsvReader csvReaderOrigin = new CsvReader(relationalInputOrigin.filePath, ',', StandardCharsets.UTF_8);
-            csvReaderOrigin.readHeaders();    // skip the header
-            while (csvReaderOrigin.readRecord()) {
-                originRowCount++;
-                String[] line = csvReaderOrigin.getValues();
-                for (int i = 0; i < columnCount; ++i)
-                    columns[i].addLine(line[i]);
-            }
-            csvReaderOrigin.close();
-
-            CsvReader csvReaderNew = new CsvReader(relationalInputNew.filePath, ',', StandardCharsets.UTF_8);
-            csvReaderNew.readHeaders();
-            while (csvReaderNew.readRecord()) {
-                newRowCount++;
-                String[] line = csvReaderNew.getValues();
-                for (int i = 0; i < columnCount; ++i)
-                    columns[i].addLine(line[i]);
-            }
-            csvReaderNew.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
         return columns;
     }
 
@@ -210,11 +161,24 @@ public class Input {
         return name;
     }
 
-    public int getOriginRowCount(){
-        return originRowCount;
-    }
-    public int getNewRowCount(){
-        return newRowCount;
+    public List<Tuple> getTuples() {
+        List<Tuple> tuples = new ArrayList<>();
+        List<String> columns = new ArrayList<>();
+        for(ParsedColumn<?> parsedColumn: parsedColumns){
+            columns.add(parsedColumn.getColumnName());
+        }
+        for(int i = 0; i < rowCount; i++){
+            List<Integer> values = new ArrayList<>();
+            Map<String, Integer> map = new HashMap<>();
+            for(int j = 0; j < colCount; j++){
+                String col = parsedColumns.get(j).getColumnName();
+                Integer value = intInput[i][j];
+                values.add(value);
+                map.put(col, value);
+            }
+            tuples.add(new Tuple(columns, values, map));
+        }
+        return tuples;
     }
 
 }

@@ -8,6 +8,7 @@ import de.metanome.algorithms.dcfinder.predicates.sets.PredicateSet;
 public class DenialConstraint {
 
     private final PredicateSet predicateSet;
+
     public DenialConstraint(PredicateSet predicateSet) {
         this.predicateSet = predicateSet;
     }
@@ -30,6 +31,10 @@ public class DenialConstraint {
 
     public int getPredicateCount() {
         return predicateSet.size();
+    }
+
+    public int getNonEqualityCount(){
+        return  0;
     }
 
     //判断两个dcs是否相等。
