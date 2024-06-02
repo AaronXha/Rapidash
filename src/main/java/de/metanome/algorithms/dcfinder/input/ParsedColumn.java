@@ -15,7 +15,6 @@ public class ParsedColumn<T extends Comparable<T>> {
     private final HashObjIntMap<T> valueSet = HashObjIntMaps.newMutableMap();
     private final List<T> values = new ArrayList<>();
     private final Class<T> type;
-
     private final IndexProvider<T> indexProvider;
 
     public ParsedColumn(String columnName, Class<T> type, int index, IndexProvider<T> indexProvider) {

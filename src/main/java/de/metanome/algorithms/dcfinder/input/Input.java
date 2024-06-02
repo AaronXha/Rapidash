@@ -5,10 +5,7 @@ import de.metanome.algorithms.dcfinder.helpers.IndexProvider;
 import rapidash.Tuple;
 
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Input {
 
@@ -56,7 +53,6 @@ public class Input {
                 String[] line = csvReader.getValues();
                 for (int i = 0; i < columnCount; ++i)
                     columns[i].addLine(line[i]);
-
                 ++nLine;
                 if (rowLimit > 0 && nLine >= rowLimit)
                     break;
@@ -68,32 +64,6 @@ public class Input {
         return columns;
     }
 
-    private Column[] readRelationalInputToColumns(RelationalInput relationalInput, int rowLimit,int start) {
-        final int columnCount = relationalInput.numberOfColumns();
-        Column[] columns = new Column[columnCount];
-        for (int i = 0; i < columnCount; ++i)
-            columns[i] = new Column(relationalInput.relationName(), relationalInput.columnNames[i]);
-
-        int nLine = start;
-        try {
-            CsvReader csvReader = new CsvReader(relationalInput.filePath, ',', StandardCharsets.UTF_8);
-            csvReader.readHeaders();    // skip the header
-            while (csvReader.readRecord()) {
-                String[] line = csvReader.getValues();
-                for (int i = 0; i < columnCount; ++i)
-                    columns[i].addLine(line[i]);
-
-                ++nLine;
-                if (rowLimit > 0 && nLine >= rowLimit)
-                    break;
-            }
-            csvReader.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        return columns;
-    }
 
     private List<ParsedColumn<?>> buildParsedColumns(Column[] columns) {
         //存放每列的数据。
@@ -161,7 +131,7 @@ public class Input {
         return name;
     }
 
-    public List<Tuple> getTuples() {
+    public List<Tuple> buildTuples() {
         List<Tuple> tuples = new ArrayList<>();
         List<String> columns = new ArrayList<>();
         for(ParsedColumn<?> parsedColumn: parsedColumns){
@@ -169,14 +139,10 @@ public class Input {
         }
         for(int i = 0; i < rowCount; i++){
             List<Integer> values = new ArrayList<>();
-            Map<String, Integer> map = new HashMap<>();
             for(int j = 0; j < colCount; j++){
-                String col = parsedColumns.get(j).getColumnName();
-                Integer value = intInput[i][j];
-                values.add(value);
-                map.put(col, value);
+                values.add(intInput[j][i]);
             }
-            tuples.add(new Tuple(columns, values, map));
+            tuples.add(new Tuple(columns, values));
         }
         return tuples;
     }

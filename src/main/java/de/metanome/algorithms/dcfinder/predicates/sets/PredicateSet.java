@@ -31,6 +31,9 @@ public class PredicateSet implements Iterable<Predicate> {
         this.bitset = pS.getBitset().clone();
     }
 
+    public static IndexProvider<Predicate> getIndexProvider() {
+        return indexProvider;
+    }
 
     private PredicateSet InvT1T2;
 

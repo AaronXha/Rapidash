@@ -1,8 +1,14 @@
 package de.metanome.algorithms.dcfinder.denialconstraints;
 
 import ch.javasoft.bitset.LongBitSet;
+import de.metanome.algorithms.dcfinder.predicates.Operator;
 import de.metanome.algorithms.dcfinder.predicates.Predicate;
 import de.metanome.algorithms.dcfinder.predicates.sets.PredicateSet;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 
 public class DenialConstraint {
@@ -33,9 +39,59 @@ public class DenialConstraint {
         return predicateSet.size();
     }
 
-    public int getNonEqualityCount(){
-        return  0;
+    public List<Predicate> getPredicates() {
+        List<Predicate> predicates = new ArrayList<>();
+        for(Predicate p : predicateSet) {
+            predicates.add(p);
+        }
+        return  predicates;
     }
+
+    public List<Predicate> getEqualityPredicates() {
+        List<Predicate> equalityPredicates = new ArrayList<>();
+        for (Predicate p : predicateSet) {
+            if (p.getOperator() == Operator.EQUAL)
+                equalityPredicates.add(p);
+        }
+        return equalityPredicates;
+    }
+
+    public int getEqualityCount() {
+        return getEqualityPredicates().size();
+    }
+
+    public List<Predicate> getNonEqualityPredicates() {
+        List<Predicate> nonEqualityPredicates = new ArrayList<>();
+        for (Predicate p : predicateSet) {
+            if (p.getOperator() != Operator.EQUAL)
+                nonEqualityPredicates.add(p);
+        }
+        return nonEqualityPredicates;
+    }
+
+
+    public int getNonEqualityCount() {
+        return getNonEqualityPredicates().size();
+    }
+
+    public List<String> getEqualityColumns() {
+        Set<String> equalityColumns = new HashSet<>();
+        for(Predicate p : getEqualityPredicates()){
+            equalityColumns.add(p.getOperand1().getColumn().getColumnName());
+            equalityColumns.add(p.getOperand2().getColumn().getColumnName());
+        }
+        return new ArrayList<>(equalityColumns);
+    }
+
+    public List<String> getNonEqualityColumns() {
+        HashSet<String> nonEqualityColumns = new HashSet<>();
+        for(Predicate p : getNonEqualityPredicates()){
+            nonEqualityColumns.add(p.getOperand1().getColumn().getColumnName());
+            nonEqualityColumns.add(p.getOperand2().getColumn().getColumnName());
+        }
+        return new ArrayList<>(nonEqualityColumns);
+    }
+
 
     //判断两个dcs是否相等。
     private boolean containedIn(PredicateSet otherPS) {

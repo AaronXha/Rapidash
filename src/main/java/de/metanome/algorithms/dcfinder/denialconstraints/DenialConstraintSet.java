@@ -19,6 +19,9 @@ public class DenialConstraintSet implements Iterable<DenialConstraint> {
     public DenialConstraintSet() {
     }
 
+    public Set<DenialConstraint> getConstraints() {
+        return constraints;
+    }
 
     public boolean contains(DenialConstraint dc) {
         return constraints.contains(dc);

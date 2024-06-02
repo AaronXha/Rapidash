@@ -9,23 +9,35 @@ public class Tuple {
     private int colCount;
     private List<String> columns;
     private List<Integer> values;
-    private Map<String, Integer> tupleMap;
 
-    public Tuple(List<String> columns, List<Integer> values, Map<String, Integer> map){
+    public Tuple(List<String> columns, List<Integer> values){
         this.columns = columns;
         this.values = values;
-        this.tupleMap = map;
     }
+
+    public int getColCount() {
+        return colCount;
+    }
+
+    public List<String> getColumns() {
+        return columns;
+    }
+
+    public List<Integer> getValues() {
+        return values;
+    }
+
 
     public Projection getProjection(List<String> cols){
         List<Integer> pValues = new ArrayList<>();
-        Map<String, Integer> pMap = new HashMap<>();
         for(String col: cols){
-            Integer v = tupleMap.get(col);
-            pValues.add(v);
-            pMap.put(col, v);
+            pValues.add(values.get(cols.indexOf(col)));
         }
-        return new Projection(cols, pValues, pMap);
+        return new Projection(cols, pValues);
+    }
+
+    public Integer getColValue(String col){
+        return values.get(columns.indexOf(col));
     }
 
 }
