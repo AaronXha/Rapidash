@@ -99,6 +99,13 @@ public enum Operator {
     }
     return false;
   }
+  public boolean containLess(){
+    return this.equals(Operator.LESS)||this.equals(Operator.LESS_EQUAL);
+  }
+  public boolean containGreat(){
+    return this.equals(Operator.GREATER)||this.equals(Operator.GREATER_EQUAL);
+  }
+
 
   /**
    * a {op} b iff ! (a {op.inverse} b)
