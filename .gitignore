@@ -1,3 +1,4 @@
-.idea/
+/target/
 
-target/
+/src/main/java/rapidash/test.java
+/.idea/
