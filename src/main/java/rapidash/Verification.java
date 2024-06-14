@@ -2,9 +2,11 @@ package rapidash;
 
 import de.metanome.algorithms.dcfinder.denialconstraints.DenialConstraint;
 import de.metanome.algorithms.dcfinder.input.Input;
+
 import de.metanome.algorithms.dcfinder.predicates.Operator;
 import de.metanome.algorithms.dcfinder.predicates.Predicate;
 import de.metanome.algorithms.dcfinder.predicates.sets.PredicateSet;
+
 import edu.wlu.cs.levy.CG.KeyDuplicateException;
 import edu.wlu.cs.levy.CG.KeySizeException;
 

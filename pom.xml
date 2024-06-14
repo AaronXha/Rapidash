@@ -8,6 +8,7 @@
     <artifactId>Rapidash</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+
     <dependencies>
         <!-- https://mvnrepository.com/artifact/com.koloboke/koloboke-impl-common-jdk8 -->
         <dependency>
@@ -56,11 +57,14 @@
 
     </dependencies>
 
+
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
         <maven.compiler.target>8</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
+
+
     <build>
         <plugins>
             <plugin>

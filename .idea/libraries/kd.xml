@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="kd">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/kd.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/kd.jar!/edu/wlu/cs/levy/CG" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/kd.jar!/" />
+    </SOURCES>
+  </library>
+</component>
