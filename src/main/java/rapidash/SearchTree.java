@@ -23,7 +23,7 @@ public class SearchTree {
         double[] U = transform(k, range.getU());
         double[] invertL = transform(k, range.getInvertL());
         double[] invertU = transform(k, range.getInvertU());
-        return kt.range(L, U).size() == 0 && kt.range(invertL, invertU).size() == 0;
+        return kt.range(L, U).isEmpty() && kt.range(invertL, invertU).isEmpty();
     }
 
     public void insert(Projection p) throws KeyDuplicateException, KeySizeException {

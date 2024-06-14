@@ -19,7 +19,8 @@ public class Benchmark {
 
         for(DenialConstraint dc: dcs){
             Verification verify = new Verification();
-            verify.verify(input, dc);
+            if(!verify.verify(input, dc))
+                System.out.println(dc);
         }
     }
 

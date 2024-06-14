@@ -95,6 +95,7 @@ public class Predicate {
         return op;
     }
 
+
     public ColumnOperand<?> getOperand1() {
         return operand1;
     }

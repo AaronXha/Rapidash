@@ -131,4 +131,7 @@ public class PredicateSet implements Iterable<Predicate> {
         return sb.toString();
     }
 
+    public void modifyPredicate(int index, Predicate predicate){
+
+    }
 }
