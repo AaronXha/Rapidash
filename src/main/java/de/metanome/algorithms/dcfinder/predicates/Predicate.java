@@ -6,7 +6,6 @@ import java.util.Collections;
 import java.util.List;
 
 
-import de.metanome.algorithms.dcfinder.predicates.Operator;
 import de.metanome.algorithms.dcfinder.predicates.operands.ColumnOperand;
 
 
@@ -18,7 +17,7 @@ public class Predicate {
     }
 
 
-    private final Operator op;
+    private Operator op;
     private final ColumnOperand operand1;
     private final ColumnOperand operand2;
 
@@ -150,5 +149,10 @@ public class Predicate {
 
     public boolean isCrossColumn() {
         return !operand1.getColumn().getColumnIdentifier().equals(operand2.getColumn().getColumnIdentifier());
+    }
+
+    public Predicate setOperator(Operator op) {
+        this.op = op;
+        return this;
     }
 }

@@ -7,6 +7,7 @@ import ch.javasoft.bitset.LongBitSet;
 import ch.javasoft.bitset.LongBitSet;
 import ch.javasoft.bitset.LongBitSet.LongBitSetFactory;
 import de.metanome.algorithms.dcfinder.helpers.IndexProvider;
+import de.metanome.algorithms.dcfinder.predicates.Operator;
 import de.metanome.algorithms.dcfinder.predicates.Predicate;
 
 public class PredicateSet implements Iterable<Predicate> {
@@ -131,7 +132,8 @@ public class PredicateSet implements Iterable<Predicate> {
         return sb.toString();
     }
 
-    public void modifyPredicate(int index, Predicate predicate){
-
+    public void modifyPredicate(Predicate predicate, Operator op){
+        remove(predicate);
+        add(new Predicate(op, predicate.getOperand1(), predicate.getOperand2()));
     }
 }

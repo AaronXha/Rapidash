@@ -5,30 +5,22 @@ import de.metanome.algorithms.dcfinder.input.Input;
 
 import de.metanome.algorithms.dcfinder.predicates.Operator;
 import de.metanome.algorithms.dcfinder.predicates.Predicate;
+import de.metanome.algorithms.dcfinder.predicates.operands.ColumnOperand;
 import de.metanome.algorithms.dcfinder.predicates.sets.PredicateSet;
 
 import edu.wlu.cs.levy.CG.KeyDuplicateException;
 import edu.wlu.cs.levy.CG.KeySizeException;
 
+import java.util.HashMap;
 import java.util.List;
 
 public class Verification {
 
-    public boolean verify(Input input, DenialConstraint dc) throws KeyDuplicateException, KeySizeException {
+    public static boolean verify(Input input, DenialConstraint dc) throws KeyDuplicateException, KeySizeException {
         //first split dcs with disequality(namely <> or unequal) predicates into inequality
-        PredicateSet predicates = dc.getPredicateSet();
-        for(Predicate p : predicates){
-            if(p.getOperator() == Operator.UNEQUAL){
-                predicates.remove(p);
-                //split and verify recursively
-                //split s.C <> t.D into the conjunction s.C < t.D or s.C > t.D
-                PredicateSet predicates1 = new PredicateSet(predicates);
-                predicates1.add(new Predicate(Operator.LESS, p.getOperand1(), p.getOperand2()));
-                PredicateSet predicates2 = new PredicateSet(predicates);
-                predicates2.add(new Predicate(Operator.GREATER, p.getOperand1(), p.getOperand2()));
-                DenialConstraint dc1 = new DenialConstraint(predicates1);
-                DenialConstraint dc2 = new DenialConstraint(predicates2);
-                return verify(input, dc1) || verify(input, dc2);
+        for(Predicate predicate : dc.getPredicateSet()){
+            if(predicate.getOperator() == Operator.UNEQUAL){
+                return verify(input, dc.modifyPredicate(predicate, Operator.LESS)) || verify(input, dc.modifyPredicate(predicate.setOperator(Operator.LESS), Operator.GREATER));
             }
         }
 
@@ -48,18 +40,19 @@ public class Verification {
             if(k != 0) {
                 SearchTree sTree = hTable.getSearchTree(p);
                 SearchRange sRange = new SearchRange(k, t, dc);
-                if(!sTree.booleanRangeSearch(sRange))
-                    return false;
+                if(!sTree.booleanRangeSearch(sRange)){
+                    return false;}
                 sTree.insert(t.getProjection(dc.getNonEqualityColumns()));
             } else {
                 Integer i = hTable.getInt(p);
-                if(i > 0)
-                    return false;
+                if(i > 0){
+                    return false;}
                 hTable.put(p,i + 1);
             }
         }
         return true;
     }
+
 
 
 }

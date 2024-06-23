@@ -53,7 +53,9 @@ public class SearchRange {
 
     public void homogeneousPredicate(Tuple t, Predicate p, int index){
         if(p.getOperator() == Operator.LESS || p.getOperator() == Operator.LESS_EQUAL){
-            U.set(index, Math.min(U.get(index), t.getColValue(p.getOperand1().getColumn().getColumnName())));
+            int t1 = U.get(index);
+            int t2 = t.getColValue(p.getOperand1().getColumn().getColumnName());
+            U.set(index, Math.min(t1, t2));
         }
         if(p.getOperator() == Operator.GREATER || p.getOperator() == Operator.GREATER_EQUAL){
             L.set(index, Math.max(L.get(index), t.getColValue(p.getOperand1().getColumn().getColumnName())));

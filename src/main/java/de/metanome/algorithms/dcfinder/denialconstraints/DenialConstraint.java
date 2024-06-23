@@ -17,12 +17,28 @@ public class DenialConstraint {
 
     public DenialConstraint(PredicateSet predicateSet) {
         this.predicateSet = predicateSet;
+       // initialize();
     }
 
     public DenialConstraint(LongBitSet predicates) {
         this.predicateSet = new PredicateSet(predicates);
+        //initialize();
     }
 
+    public void initialize() {
+        for(Predicate p:predicateSet) {
+            if (p.getOperator() == Operator.EQUAL)
+                counts[0]++;
+            else if(p.getOperator() == Operator.UNEQUAL)
+                counts[2]++;
+            else{
+                counts[1]++;
+                singleInequality = p;
+            }
+        }
+        if(counts[1] != 1)
+            singleInequality = null;
+    }
     public boolean containsPredicate(Predicate p) {
         return predicateSet.containsPredicate(p) || predicateSet.containsPredicate(p.getSymmetric());
     }
@@ -38,6 +54,10 @@ public class DenialConstraint {
     public int getPredicateCount() {
         return predicateSet.size();
     }
+
+    public int[] counts = new int[3];//0 for equality, 1 for inequality, 2 for unEquality
+
+    public Predicate singleInequality;
 
     public List<Predicate> getPredicates() {
         List<Predicate> predicates = new ArrayList<>();
@@ -72,6 +92,32 @@ public class DenialConstraint {
 
     public int getNonEqualityCount() {
         return getNonEqualityPredicates().size();
+    }
+
+    public List<Predicate> getInEqualityPredicate(){
+        List<Predicate> inEqualityPredicates = new ArrayList<>();
+        for (Predicate p : predicateSet) {
+            if (p.getOperator() != Operator.EQUAL && p.getOperator() != Operator.UNEQUAL)
+                inEqualityPredicates.add(p);
+        }
+        return inEqualityPredicates;
+    }
+
+    public List<Predicate> getUnEquality(){
+        List<Predicate> unEqualityPredicates = new ArrayList<>();
+        for (Predicate p : predicateSet) {
+            if (p.getOperator() == Operator.UNEQUAL)
+                unEqualityPredicates.add(p);
+        }
+        return unEqualityPredicates;
+    }
+
+    public int getUnEqualityCount(){
+        return getUnEquality().size();
+    }
+
+    public int getInEqualityCount(){
+        return getInEqualityPredicate().size();
     }
 
     public List<String> getEqualityColumns() {
@@ -153,4 +199,8 @@ public class DenialConstraint {
         return sb.toString();
     }
 
+    public DenialConstraint modifyPredicate(Predicate p, Operator op){
+        predicateSet.modifyPredicate(p, op);
+        return this;
+    }
 }
