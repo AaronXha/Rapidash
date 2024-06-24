@@ -17,6 +17,7 @@ public class SearchRange {
     public List<Integer> invertL;
 
     public SearchRange(int k){//default search range
+        long t0 = System.currentTimeMillis();
         this.k = k;
         U = new ArrayList<>(k);
         L = new ArrayList<>(k);
@@ -28,11 +29,12 @@ public class SearchRange {
             invertL.add(Integer.MAX_VALUE);
             invertU.add(Integer.MIN_VALUE);
         }
+        Benchmark.time_rangeTree += System.currentTimeMillis() - t0;
     }
 
     public SearchRange(int k, Tuple t, DenialConstraint dc){//generate search range for inequality predicates
         this(k);
-
+        long t0 = System.currentTimeMillis();
         List<Predicate> nonEqualityPredicates = dc.getNonEqualityPredicates();
         for(Predicate p : nonEqualityPredicates){//process homogeneous predicates and heterogeneous predicates differently
             int index = nonEqualityPredicates.indexOf(p);
@@ -48,7 +50,7 @@ public class SearchRange {
                 heterogeneousPredicate(t, p, index);
             }
         }
-
+        Benchmark.time_rangeTree += System.currentTimeMillis() - t0;
     }
 
     public void homogeneousPredicate(Tuple t, Predicate p, int index){

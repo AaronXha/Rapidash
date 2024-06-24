@@ -22,6 +22,7 @@ public class test_for_v3 {
 
         FastADC dcFinder = new FastADC(true, 0, 100, false);
         Set<DenialConstraint> dcs = dcFinder.buildApproxDCs(path, 100).getConstraints();
+        List<Tuple> tuples = input.buildTuples();
 
 
         for(DenialConstraint dc: dcs){
@@ -30,7 +31,7 @@ public class test_for_v3 {
                 List<Predicate> l =  dc.getNonEqualityPredicates();
                 System.out.println(dc);
                 System.out.println(l);
-                System.out.println(verify.verify(input, dc,l.get(0)));
+                System.out.println(verify.verify(tuples, dc,l.get(0)));
 
             }
 

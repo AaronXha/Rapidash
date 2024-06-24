@@ -15,15 +15,13 @@ import java.util.List;
  */
 public class Verification3 {
 
-    public boolean verify(Input input, DenialConstraint dc, Predicate p) {
+    public boolean verify(List<Tuple> tuples, DenialConstraint dc, Predicate p) {
         // Initialize hash tables
 
         HashMap<Projection, Double> minA = new HashMap<>();
         HashMap<Projection, Double> maxA = new HashMap<>();
         HashMap<Projection, Double> minB = new HashMap<>();
         HashMap<Projection, Double> maxB = new HashMap<>();
-
-        List<Tuple> tuples = input.buildTuples();
 
         for (Tuple t : tuples) {
             Projection v = t.getProjection(dc.getEqualityColumns());

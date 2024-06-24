@@ -16,20 +16,23 @@ import java.util.List;
 
 public class Verification {
 
-    public static boolean verify(Input input, DenialConstraint dc) throws KeyDuplicateException, KeySizeException {
+    public static boolean verify(List<Tuple> tuples, DenialConstraint dc) throws KeyDuplicateException, KeySizeException {
+        Benchmark.verify++;
         //first split dcs with disequality(namely <> or unequal) predicates into inequality
         for(Predicate predicate : dc.getPredicateSet()){
             if(predicate.getOperator() == Operator.UNEQUAL){
-                return verify(input, dc.modifyPredicate(predicate, Operator.LESS)) || verify(input, dc.modifyPredicate(predicate.setOperator(Operator.LESS), Operator.GREATER));
+                return verify(tuples, dc.modifyPredicate(predicate, Operator.LESS)) || verify(tuples, dc.modifyPredicate(predicate.setOperator(Operator.LESS), Operator.GREATER));
             }
         }
 
         int k = dc.getNonEqualityCount();
         HTable hTable = new HTable();
-        List<Tuple> tuples = input.buildTuples();
 
         for (Tuple t : tuples){
-            Projection p = t.getProjection(dc.getEqualityColumns());
+            long t1 = System.currentTimeMillis();
+            List<String> equalityColumns = dc.getEqualityColumns();
+            Benchmark.time_getColumns += System.currentTimeMillis() - t1;
+            Projection p = t.getProjection(equalityColumns);
             if (!hTable.contains(p)) {
                 if (k == 0) {//zero inequality case
                     hTable.put(p,0);
@@ -41,12 +44,17 @@ public class Verification {
                 SearchTree sTree = hTable.getSearchTree(p);
                 SearchRange sRange = new SearchRange(k, t, dc);
                 if(!sTree.booleanRangeSearch(sRange)){
-                    return false;}
-                sTree.insert(t.getProjection(dc.getNonEqualityColumns()));
+                    return false;
+                }
+                long t2 = System.currentTimeMillis();
+                List<String> nonEqualityColumns = dc.getNonEqualityColumns();
+                Benchmark.time_getColumns += System.currentTimeMillis() - t2;
+                sTree.insert(t.getProjection(nonEqualityColumns));
             } else {
                 Integer i = hTable.getInt(p);
                 if(i > 0){
-                    return false;}
+                    return false;
+                }
                 hTable.put(p,i + 1);
             }
         }

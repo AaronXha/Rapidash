@@ -18,16 +18,21 @@ public class SearchTree {
 
 
     public boolean booleanRangeSearch(SearchRange range) throws KeySizeException {
+        long t0 = System.currentTimeMillis();
         int k = range.getK();
         double[] L = transform(k, range.getL());
         double[] U = transform(k, range.getU());
         double[] invertL = transform(k, range.getInvertL());
         double[] invertU = transform(k, range.getInvertU());
-        return !kt.range(L, U).isEmpty() && !kt.range(invertL, invertU).isEmpty();
+        boolean flag = !kt.range(L, U).isEmpty() && !kt.range(invertL, invertU).isEmpty();
+        Benchmark.time_search += System.currentTimeMillis() - t0;
+        return flag;
     }
 
     public void insert(Projection p) throws KeyDuplicateException, KeySizeException {
+        long t0 = System.currentTimeMillis();
         kt.insert(transform(p.getSize(), p.getValues()), new Object());
+        Benchmark.time_insert += System.currentTimeMillis() - t0;
     }
 
     public double[] transform(int k, List<Integer> list) {

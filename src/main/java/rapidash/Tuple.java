@@ -29,10 +29,12 @@ public class Tuple {
 
 
     public Projection getProjection(List<String> cols){
+        long t0 = System.currentTimeMillis();
         List<Integer> pValues = new ArrayList<>();
         for(String col: cols){
             pValues.add(values.get(cols.indexOf(col)));
         }
+        Benchmark.time_projection += System.currentTimeMillis() - t0;
         return new Projection(cols, pValues);
     }
 
